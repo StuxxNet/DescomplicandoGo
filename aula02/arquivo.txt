@@ -1,0 +1,2 @@
+Meu primeiro arquivo lido com Go
+Com line break pra ver como funciona
