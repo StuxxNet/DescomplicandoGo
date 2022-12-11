@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 )
 
@@ -98,6 +99,46 @@ func readByteByByte(filePath string) {
 	}
 }
 
+func basicWriteIntoFile(filePath string) {
+	// Criado variável pra guardar o modo do arquivo
+	var perm fs.FileMode = 0744
+
+	// Conteúdo do arquivo
+	txt := []byte("Esse eh o conteudo do meu arquivo novo")
+
+	// Escrita básica
+	os.WriteFile(filePath, txt, perm)
+}
+
+func createWriteFile(filePath string, content string) {
+	// Criando arquivo no SO
+	file, err := os.Create(filePath)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// Fechamento ao fim da função
+	defer file.Close()
+
+	// Escrevendo conteúdo no arquivo
+	file.WriteString(content)
+}
+
+func createFileAppending(filePath string, content string) {
+	// Abrindo arquivo, e caso ele não exista criaremos
+	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// Fechamento ao fim da função
+	defer file.Close()
+
+	// Appendando no arquivo criado/aberto
+	file.WriteString(content)
+	file.WriteString("\n--------\n")
+}
+
 func main() {
-	readViaIoScanner("TA_PRECO_MEDICAMENTO.CSV")
+	createFileAppending("arquivo-novo.txt", "Meu conteúdo para escrever")
 }
