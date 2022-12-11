@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"path/filepath"
 )
 
 func checkSize(filePath string) {
@@ -139,6 +140,23 @@ func createFileAppending(filePath string, content string) {
 	file.WriteString("\n--------\n")
 }
 
+// Função que será chamada para cada arquivo dentro do meu
+// diretório durante o walk feito pelo WalkDir
+func iterateDir(path string, d fs.DirEntry, err error) error {
+	fmt.Println("É diretório? ", d.IsDir())
+
+	info, err := d.Info()
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	fmt.Println(info.Name())
+	fmt.Println("\n------------")
+
+	return nil
+}
+
 func main() {
-	createFileAppending("arquivo-novo.txt", "Meu conteúdo para escrever")
+	filepath.WalkDir(".", iterateDir)
 }
